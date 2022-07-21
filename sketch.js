@@ -2,7 +2,6 @@ let group = [];  // our particle system
   
 let settings = {
   damping: 1,
- 
   stroke_alpha: 30, // foreground
   strokeRedP: 255,
   strokeGreenP : 0,
@@ -10,11 +9,11 @@ let settings = {
   strokeRedL: 0,
   strokeGreenL : 0,
   strokeBlueL: 0,
-  particleSize: 5,
+  particleSize: 0,
   Red_bg: 255,
   Green_bg: 255,
   Blue_bg: 255,
-  bg_alpha: 255, // background
+  bg_alpha: 254, // background
   particles: true,
   lines: true,
   linesWeight: 1,
@@ -23,33 +22,46 @@ let settings = {
 }
   
 let gui; 
+var svg;
 
 // Create a new canvas to match the browser size
 function setup() {
   createCanvas(windowWidth - 300, windowHeight);
   rectMode(CENTER); 
+
+
+
+function setup() {
+  var myCanvas = createCanvas(1200, 1200, SVG);
+  myCanvas.parent("#myContainer");
+
+  svg = createSVG();
+  svg.beginRecord();
+}
+  
   
   gui = new dat.GUI();
-  gui.add(settings, 'particles', true, false);
-  gui.add(settings, 'particleSize', 0, 100);
-  gui.add(settings, 'lines', true, false);
-  gui.add(settings, 'linesWeight', 1, 10);
-  gui.add(settings, 'damping', 0.95, 1);
-  gui.add(settings, 'Red_bg', 0, 255);
-  gui.add(settings, 'Green_bg', 0, 255);
-  gui.add(settings, 'Blue_bg', 0, 255);
-  gui.add(settings, 'bg_alpha', 0, 255);
-  gui.add(settings, 'strokeRedP', 0, 255);
-  gui.add(settings, 'strokeGreenP', 0, 255);
-  gui.add(settings, 'strokeBlueP', 0, 255);
-  gui.add(settings, 'strokeRedL', 0, 255);
-  gui.add(settings, 'strokeGreenL', 0, 255);
-  gui.add(settings, 'strokeBlueL', 0, 255);
-  gui.add(settings, 'stroke_alpha', 0, 255);
-  gui.add(settings, 'gravity', -0.1, 0.1);
-  gui.add(settings, 'lifespan', 2, 1000);
+  gui.add(settings, 'particles', true, false).name("Particles");
+  gui.add(settings, 'particleSize', 0, 100).name("Particle Size");
+  gui.add(settings, 'lines', true, false).name("Lines");
+  gui.add(settings, 'linesWeight', 1, 10).name("Line Weight");
+  gui.add(settings, 'damping', 0.95, 1).name("Friction");
+  gui.add(settings, 'Red_bg', 0, 255).name("Red Background");
+  gui.add(settings, 'Green_bg', 0, 255).name("Green Background");
+  gui.add(settings, 'Blue_bg', 0, 255).name("Blue Background");
+  gui.add(settings, 'bg_alpha', 0, 254).name("Alpha Background");
+  gui.add(settings, 'strokeRedP', 0, 255).name("Red Particles");
+  gui.add(settings, 'strokeGreenP', 0, 255).name("Green Particles");
+  gui.add(settings, 'strokeBlueP', 0, 255).name("Blue Particles");
+  gui.add(settings, 'strokeRedL', 0, 255).name("Red Lines");
+  gui.add(settings, 'strokeGreenL', 0, 255).name("Green Lines");
+  gui.add(settings, 'strokeBlueL', 0, 255).name("Blue Lines");
+  gui.add(settings, 'stroke_alpha', 0, 255).name("Alpha Drawing");
+  gui.add(settings, 'gravity', -0.1, 0.1).name("Gravity");
+  gui.add(settings, 'lifespan', 2, 1000).name("Lifespan");
 
   gui.remember(settings);
+  gui.width = 300;
   gui.close();
   
   background(settings.Red_bg, settings.Green_bg, settings.Blue_bg, settings.bg_alpha);
