@@ -11,10 +11,12 @@ let settings = {
   strokeGreenL : 0,
   strokeBlueL: 0,
   particleSize: 5,
-
-
-
-
+  Red_bg: 255,
+  Green_bg: 255,
+  Blue_bg: 255,
+  particles: true,
+  lines: true,
+  linesWeight: 1,
   gravity: 0,
   lifespan: 400,
 }
@@ -27,8 +29,14 @@ function setup() {
   rectMode(CENTER); 
   
   gui = new dat.GUI();
-  gui.add(settings, 'particleSize', 3, 100);
+  gui.add(settings, 'particles', true, false);
+  gui.add(settings, 'particleSize', 0, 100);
+  gui.add(settings, 'lines', true, false);
+  gui.add(settings, 'linesWeight', 1, 10);
   gui.add(settings, 'damping', 0.95, 1);
+  gui.add(settings, 'Red_bg', 0, 255);
+  gui.add(settings, 'Green_bg', 0, 255);
+  gui.add(settings, 'Blue_bg', 0, 255);
   gui.add(settings, 'bg_alpha', 0, 255);
   gui.add(settings, 'strokeRedP', 0, 255);
   gui.add(settings, 'strokeGreenP', 0, 255);
@@ -38,16 +46,21 @@ function setup() {
   gui.add(settings, 'strokeBlueL', 0, 255);
   gui.add(settings, 'stroke_alpha', 0, 255);
   gui.add(settings, 'gravity', -0.1, 0.1);
-  gui.add(settings, 'lifespan', 100, 1000);
+  gui.add(settings, 'lifespan', 2, 1000);
+
+  gui.remember(settings);
   gui.close();
   
-  background(255);
+  background(settings.Red_bg, settings.Green_bg, settings.Blue_bg, settings.bg_alpha);
+
 }
 
 // On window resize, update the canvas size
 function windowResized() {
   resizeCanvas(windowWidth-300, windowHeight);
-  background(255);
+  
+  background(settings.Red_bg, settings.Green_bg, settings.Blue_bg, settings.bg_alpha);
+  noFill();     
 }
 
 function createAgent(x=0, y=0, vx=0, vy=0) {
@@ -60,18 +73,9 @@ function createAgent(x=0, y=0, vx=0, vy=0) {
   return temp; 
 }
 
+
 function keyPressed() { 
-  if (key == ' ') {
-    if (paused == false) {
-      noLoop();  
-      paused = true;
-    }  
-    else {
-      loop(); 
-      paused = false;
-    }    
-  }
-  
+
   if (key == 's') {
     save("drawing.jpg");
   }
@@ -81,10 +85,11 @@ function keyPressed() {
 // Main render loop 
 function draw() {
   // Fill in the background
-  background(255, settings.bg_alpha);
+   
+  background(settings.Red_bg, settings.Green_bg, settings.Blue_bg, settings.bg_alpha);
   noFill();     
   
-  
+  if(settings.particles == true) {
   let gravity = new p5.Vector(0, settings.gravity);
   
   // create new agents over time 
@@ -101,7 +106,9 @@ function draw() {
     applyForce(agent, gravity);
     render(agent);
   }
-  
+
+  }
+  if(settings.lines==true) {
   // draw lines connecting the agents 
   stroke(settings.strokeRedL, settings.strokeGreenL, settings.strokeBlueL, settings.stroke_alpha);
   for (let i=0; i < group.length; i++) {
@@ -113,12 +120,14 @@ function draw() {
           let y2 = group[j].position.y; 
           let d = dist(x1, y1, x2, y2);
           if (d > 25 && d < 50) {
+            strokeWeight(settings.linesWeight);
             line(x1, y1, x2, y2);
           }
        }
        
      } 
   }
+}
   
   // get rid of dead weight
   cleanUp(group);
