@@ -2,7 +2,7 @@ let group = [];  // our particle system
   
 let settings = {
   damping: 1,
-  bg_alpha: 0, // background
+ 
   stroke_alpha: 30, // foreground
   strokeRedP: 255,
   strokeGreenP : 0,
@@ -14,6 +14,7 @@ let settings = {
   Red_bg: 255,
   Green_bg: 255,
   Blue_bg: 255,
+  bg_alpha: 255, // background
   particles: true,
   lines: true,
   linesWeight: 1,
@@ -71,13 +72,13 @@ function createAgent(x=0, y=0, vx=0, vy=0) {
     lifespan: settings.lifespan,
   }
   return temp; 
-}
-
+}s
 
 function keyPressed() { 
 
   if (key == 's') {
     save("drawing.jpg");
+  
   }
 }
 
